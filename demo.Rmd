@@ -95,7 +95,7 @@ sum(combine_text$count[1:1e6])/sps/60/60/24 # 1M = 13,018,000 syllables in 329 h
 
 # 1 min rest for every 5 min of speaking, max 8 hours a day
 (sum(combine_text$count[1:1e6])/sps/60 # total min (44K min)
-    * 19/17 # 1 breath every 17 seconds (49K min)
+    * 19/17 # 1 breath every 17 syllables (49K min)
     * (6/5) # 6 min for every 5 (59K min)
     / 60    # convert to hours (982 hours)
     / 8     # max 8 hours per day (122.8 days)
