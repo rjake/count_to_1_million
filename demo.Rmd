@@ -1,8 +1,8 @@
 ---
-title: "Untitled"
+    title: "Untitled"
 output: html_document
 ---
-
+    
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -14,7 +14,7 @@ options(scipen = 999)
 df_sound <-
     tibble(unit = c(1:19, 
                     seq(20, 90, by = 10)),
-                    #1e3, 1e4, 1e5, 1e6),
+           #1e3, 1e4, 1e5, 1e6),
            sound = c("one", "two", "three", "four", "five", 
                      "six", "se-ven", "eight", "nine", "ten",
                      "e-le-ven", "twel-ve", "thir-teen", "four-teen", "fif-teen", 
@@ -31,7 +31,7 @@ all_nums <-
     mutate(d7 = str_sub(number, -7, -7),
            d6 = str_sub(number, -6, -6),
            d5 = case_when((str_sub(number, -5, -4) >= 10 & 
-                           str_sub(number, -5, -4) < 20) ~ str_sub(number, -5, -4),
+                               str_sub(number, -5, -4) < 20) ~ str_sub(number, -5, -4),
                           TRUE ~ paste0(str_sub(number, -5, -5), 0)),
            d4 = case_when((str_sub(number, -5, -4) >= 10 & str_sub(number, -5, -4) < 20) ~ "0",
                           TRUE ~ str_sub(number, -4, -4)),
@@ -59,7 +59,7 @@ get_joins[5,]
 ```{r combine_text}
 combine_text <-
     get_joins %>% 
-        replace_na(list(sound6 = "",
+    replace_na(list(sound6 = "",
                     sound5 = "",
                     sound4 = "",
                     sound3 = "",
@@ -84,19 +84,21 @@ combine_text %>%
     hist()
 
 # syllables per second
-    sps <- ceiling(sum(combine_text$count[1:100])/25)
-    
+sps <- ceiling(sum(combine_text$count[1:100])/60)
+
 #totals
-    sum(combine_text$count[1:100])/sps # 100 = 274 syllables in 25 seconds, 11 syllables a second
-    sum(combine_text$count[1:1e3])/sps/60 # 1K = 5513 syllables in 8.35 min
-    sum(combine_text$count[1:1e4])/sps/60/60 # 10K = 83103 syllables in 2.09 hours
-    sum(combine_text$count[1:1e5])/sps/60/60 # 100K = 1,020,005 syllables in 26 hours
-    sum(combine_text$count[1:1e6])/sps/60/60/24 # 1M = 13,018,000 syllables in 329 hours or 13.7 days
+sum(combine_text$count[1:100])/sps # 100 = 274 syllables in 60 seconds, 11 syllables a second
+sum(combine_text$count[1:1e3])/sps/60 # 1K = 5513 syllables in 18.7 min
+sum(combine_text$count[1:1e4])/sps/60/60 # 10K = 83103 syllables in 4.7 hours
+sum(combine_text$count[1:1e5])/sps/60/60 # 100K = 1,020,005 syllables in 57 hours
+sum(combine_text$count[1:1e6])/sps/60/60/24 # 1M = 13,018,000 syllables in 329 hours or 30.5 days
 
 # 1 min rest for every 5 min of speaking, max 8 hours a day
-    (sum(combine_text$count[1:1e6])/11/60 # total min (19,724)
-        * (6/5) # 6 min for every 5 (23,669 min)
-        / 60    # convert to hours (294 hours)
-        / 8     # max 8 hours per day (49.3 days)
-    )
+(sum(combine_text$count[1:1e6])/sps/60 # total min (44K min)
+    * 19/17 # 1 breath every 17 seconds (49K min)
+    * (6/5) # 6 min for every 5 (59K min)
+    / 60    # convert to hours (982 hours)
+    / 8     # max 8 hours per day (122.8 days)
+    * 7/5   # weekends off (170.8 days)
+)
 ```
